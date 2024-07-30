@@ -16,7 +16,6 @@ public class AuthController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createUser(@RequestBody CreateUserDto dto){
-        System.out.println("inside method");
         AuthMessage user = userService.createUser(dto);
         return ResponseEntity.status(user.status()).body(user.message());
     }

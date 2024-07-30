@@ -50,7 +50,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).map(UserToSecurityUser::from).orElseThrow();
     }
 
-    @Transactional
+//    @Transactional
     public AuthMessage createUser(CreateUserDto dto) {
         if (userExists(dto.username()))
             return new AuthMessage(HttpStatus.BAD_REQUEST, "User with username " + dto.username() + " already exists");
@@ -58,6 +58,7 @@ public class UserService implements UserDetailsService {
         user.setName(dto.name());
         user.setUsername(dto.username());
         user.setLastName(dto.lastname());
+        user.setFullname(String.format("%s %s", dto.name(), dto.lastname()));
         user.setPassword(passwordEncoder.encode(dto.password()));
         Set<Role> roles = new HashSet<>();
         for (String name : dto.roles()){
@@ -71,19 +72,21 @@ public class UserService implements UserDetailsService {
             roles.add(role);
         }
         ChatRoom chat = new ChatRoom();
-        chat.setPersonal(false);
+        chat.setPersonal(true);
         chat.setSystematic(true);
+        chat.setName(String.format("%s_system", dto.username()));
         ChatRoom chatRoom = chatRepository.save(chat);
         Message greetingMsg = new Message();
         greetingMsg.setRequestBased(false);
         greetingMsg.setContent("Welcome to the best application in the world");
         greetingMsg.setDate(LocalDateTime.now());
+        greetingMsg.setUsername("system");
         greetingMsg.setChat(chatRoom);
-        Message msg = messageRepository.save(greetingMsg);
+        messageRepository.save(greetingMsg);
         user.setRoles(roles);
         user.setChats(Set.of(chatRoom));
-        user.setApp_id(chatRoom.getId());
-        User u = userRepository.save(user);
+        user.setChatId(chatRoom.getId());
+        userRepository.save(user);
         return new AuthMessage(HttpStatus.CREATED, "User was created");
     }
 
