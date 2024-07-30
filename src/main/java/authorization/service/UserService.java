@@ -50,7 +50,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).map(UserToSecurityUser::from).orElseThrow();
     }
 
-//    @Transactional
+    @Transactional
     public AuthMessage createUser(CreateUserDto dto) {
         if (userExists(dto.username()))
             return new AuthMessage(HttpStatus.BAD_REQUEST, "User with username " + dto.username() + " already exists");
