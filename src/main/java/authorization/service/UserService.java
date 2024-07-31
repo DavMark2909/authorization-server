@@ -75,18 +75,20 @@ public class UserService implements UserDetailsService {
         chat.setPersonal(true);
         chat.setSystematic(true);
         chat.setName(String.format("%s_system", dto.username()));
-        ChatRoom chatRoom = chatRepository.save(chat);
+        ChatRoom save = chatRepository.save(chat);
         Message greetingMsg = new Message();
         greetingMsg.setRequestBased(false);
         greetingMsg.setContent("Welcome to the best application in the world");
-        greetingMsg.setDate(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        greetingMsg.setDate(now);
         greetingMsg.setUsername("system");
-        greetingMsg.setChat(chatRoom);
+        greetingMsg.setChat(save);
         messageRepository.save(greetingMsg);
         user.setRoles(roles);
-        user.setChats(Set.of(chatRoom));
-        user.setChatId(chatRoom.getId());
+        user.setChats(Set.of(save));
+        user.setChatId(save.getId());
         userRepository.save(user);
+        save.setLastTime(now);
         return new AuthMessage(HttpStatus.CREATED, "User was created");
     }
 
