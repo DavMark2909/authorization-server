@@ -4,6 +4,7 @@ import authorization.dto.AuthMessage;
 import authorization.dto.CreateUserDto;
 import authorization.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
