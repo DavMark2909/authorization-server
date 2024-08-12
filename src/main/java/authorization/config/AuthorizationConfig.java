@@ -133,8 +133,11 @@ public class AuthorizationConfig {
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings(){
-//        return AuthorizationServerSettings.builder().issuer("http://localhost:9000").build();
-        return AuthorizationServerSettings.builder().issuer("http://localhost:8765/authorization-server").build();
+//        ----- monolite configuration
+//        return AuthorizationServerSettings.builder().issuer("http://localhost:8765/authorization-server").build();
+
+//        ----- docker configuraiton
+        return AuthorizationServerSettings.builder().issuer("http://gateway:8765/authorization-server").build();
     }
 
     @Bean
